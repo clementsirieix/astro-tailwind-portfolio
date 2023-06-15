@@ -1,0 +1,64 @@
+---
+export interface Props {
+  className?: string;
+}
+
+const {className} = Astro.props;
+---
+
+<div
+  class:list={[
+    'h-full p-4 w-full overflow-y-scroll custom-scrollbar',
+    className,
+  ]}
+>
+  <slot />
+</div>
+
+<style>
+  .custom-scrollbar::-webkit-scrollbar {
+    background: none;
+    height: 16px;
+    width: 16px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb,
+  .custom-scrollbar::-webkit-scrollbar-button {
+    width: 16px;
+    height: 16px;
+    background: #1e1e2e;
+    border: 2px solid;
+    border-color: #45475a #11111b #11111b #45475a;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-button {
+    background-repeat: no-repeat;
+    background-size: 16px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    image-rendering: optimizeSpeed;
+    image-rendering: pixelated;
+    image-rendering: optimize-contrast;
+    background: #313244;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-button:vertical:decrement {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI1IiB2aWV3Qm94PSIwIDAgNiA1IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMC4zNTcgNUwzLjE3OCAwLjEyMUw1Ljk5MiA1SDAuMzU3WiIgZmlsbD0iI0NERDZGNCIvPgo8L3N2Zz4K');
+    background-size: 7px;
+    background-position: center;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-button:vertical:increment {
+    background-size: 7px;
+    background-position: center;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNiIgaGVpZ2h0PSI1IiB2aWV3Qm94PSIwIDAgNiA1IiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMy4xNzggNUwwLjM1NyAwLjEyMUg1Ljk5MkwzLjE3OCA1WiIgZmlsbD0iI0NERDZGNCIvPgo8L3N2Zz4K');
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-button:vertical:start:increment,
+  .custom-scrollbar::-webkit-scrollbar-button:vertical:end:decrement,
+  .custom-scrollbar::-webkit-scrollbar-button:horizontal:start:increment,
+  .custom-scrollbar::-webkit-scrollbar-button:horizontal:end:decrement {
+    display: none;
+  }
+</style>

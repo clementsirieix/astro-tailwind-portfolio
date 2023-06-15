@@ -1,0 +1,32 @@
+---
+import CustomSvg from './CustomSvg.astro';
+---
+
+<>
+  <div class="relative w-full">
+    <div
+      class="absolute left-1/2 top-4 hidden -translate-x-1/2 -translate-y-1/2 transform-gpu text-center text-sm tracking-[1px] text-midnight-indigo md:block"
+    >
+      <div class="absolute right-[104%] top-0 whitespace-nowrap">
+        return to home press q
+      </div>
+      - all rights reserved -
+      <div class="absolute left-[104%] top-0 whitespace-nowrap">
+        2023
+        <div class="inline-block align-text-bottom">
+          <CustomSvg src="barcode_2" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('keydown', function (event) {
+      if ('q' !== event.key) {
+        return;
+      }
+
+      window.location.assign('/');
+    });
+  </script>
+</>

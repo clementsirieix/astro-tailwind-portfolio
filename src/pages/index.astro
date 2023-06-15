@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/common/Card.astro';
+import GlowLink from '../components/common/GlowLink.astro';
+import Background from '../components/stylized/Background.astro';
+import Footer from '../components/stylized/Footer.astro';
+import {linktreeURL, pageHeading} from '../config';
+---
+
+<Layout>
+  <Card className="relative" title="Hello ~">
+    <Background />
+
+    <div
+      class="relative z-10 mx-auto flex h-full w-fit flex-col items-center justify-center"
+    >
+      <div class="flex w-full items-end justify-end text-right">
+        <div
+          class="custom-heading w-80 px-4 font-serif text-[5rem] leading-[6rem] text-misty-lilac"
+        >
+          {pageHeading}
+        </div>
+      </div>
+
+      <div
+        class="mt-8 flex w-full flex-col items-end justify-end gap-6 md:flex-row md:items-center md:justify-center md:gap-12"
+      >
+        <GlowLink href="/more" shortcut="b">Open Bio</GlowLink>
+
+        <GlowLink
+          color="peach-sorbet"
+          href={linktreeURL}
+          shortcut="l"
+          target="_blank"
+        >
+          Go to 🔗
+        </GlowLink>
+      </div>
+    </div>
+
+    <Footer />
+  </Card>
+</Layout>
+
+<style>
+  .custom-heading {
+    word-spacing: 100vw;
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+export interface Props {
+  src: string;
+}
+
+const {src} = Astro.props;
+let svgHTML;
+
+try {
+  const module = await import(
+    /* @vite-ignore */ `../../assets/svg/${src}.svg?raw`
+  );
+  svgHTML = module.default;
+} catch (error) {
+  console.error(error);
+}
+---
+
+<Fragment set:html={svgHTML} />

@@ -1,0 +1,19 @@
+---
+export interface Props {
+  description: string;
+  extra?: Record<string, string>;
+  image: string;
+  prefix: string;
+  title: string;
+}
+
+const {description, extra = {}, image, prefix, title} = Astro.props;
+---
+
+<meta property={`${prefix}:description`} content={description} />
+
+<meta property={`${prefix}:image`} content={image} />
+
+<meta property={`${prefix}:title`} content={title} />
+
+{Object.keys(extra).map((key) => <meta property={key} content={extra[key]} />)}

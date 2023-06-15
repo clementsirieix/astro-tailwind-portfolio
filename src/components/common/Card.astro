@@ -1,0 +1,25 @@
+---
+export interface Props {
+  className?: string;
+  title?: string;
+}
+
+const {className, title = 'Card'} = Astro.props;
+---
+
+<div
+  class:list={[
+    'flex flex-col h-full w-full bg-midnight-indigo overflow-hidden p-4 border-2 border-t-slate-steel border-l-slate-steel border-r-midnight-navy border-b-midnight-navy border-solid shadow-card',
+    className,
+  ]}
+>
+  <div
+    class="z-10 mb-4 h-8 w-full bg-gradient-to-r from-sky-blue-bliss to-dreamy-lavender px-4 text-sm font-bold uppercase leading-8 text-midnight-indigo"
+  >
+    {title}
+  </div>
+
+  <div class="flex grow flex-col overflow-y-auto overflow-x-hidden">
+    <slot />
+  </div>
+</div>

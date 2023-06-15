@@ -1,0 +1,60 @@
+---
+import {Image} from 'astro:assets';
+import {getCollection} from 'astro:content';
+import Card from '../common/Card.astro';
+import ScrollableContainer from '../common/ScrollableContainer.astro';
+
+const projects = (
+  await getCollection('project', ({id}) => {
+    const prefix =
+      import.meta.env.NODE_ENV === 'test' ? 'mock/' : 'production/';
+
+    return id.startsWith(prefix);
+  })
+).sort(
+  (a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf()
+);
+---
+
+<Card className="custom-projects" title="projects [↗]">
+  <ScrollableContainer
+    className={`flex flex-wrap justify-between gap-4 ${
+      projects.length === 0 ? 'items-center' : ''
+    }`}
+  >
+    {
+      projects.length === 0 ? (
+        <div class="custom-title w-full text-center font-serif text-lg text-misty-lilac ">
+          My projects will go over there 🚧
+        </div>
+      ) : (
+        projects.map(({data}) => (
+          <a
+            class="inline-flex w-40 flex-col items-center hover:italic"
+            href={data.link}
+            target="_blank"
+          >
+            <Image class="mb-4 w-20" src={data.icon} alt={data.iconAlt} />
+
+            <div class="mb-4 w-full truncate text-center font-serif text-lg capitalize text-misty-lilac">
+              {data.name}
+            </div>
+          </a>
+        ))
+      )
+    }
+  </ScrollableContainer>
+</Card>
+
+<style>
+  .custom-projects {
+    grid-area: projects;
+  }
+
+  @media (max-width: 1200px) {
+    .custom-projects {
+      height: 240px !important;
+      margin-bottom: 1rem;
+    }
+  }
+</style>

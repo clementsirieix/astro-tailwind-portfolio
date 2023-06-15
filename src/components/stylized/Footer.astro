@@ -1,0 +1,97 @@
+---
+import {Element as CheerioElement, load as cheerioLoad} from 'cheerio';
+import cache from 'memory-cache';
+import {githubDataRefreshMs, githubUsername} from '../../config';
+import CustomSvg from '../common/CustomSvg.astro';
+
+type DataElement = {
+  date: string | undefined;
+  count: number;
+  intensity: string;
+};
+
+async function fetchData(username: string) {
+  if (import.meta.env.NODE_ENV === 'test') {
+    return [];
+  }
+  const data = await fetch(`https://github.com/${username}?tab=overview`);
+  const $ = cheerioLoad(await data.text());
+  const $days = $('svg.js-calendar-graph-svg rect.ContributionCalendar-day');
+  const parseDay = (day: CheerioElement): DataElement => {
+    const $day = $(day);
+
+    return {
+      date: $day.attr('data-date'),
+      count: parseInt(($day as any).text().split(' ')[0], 10) || 0,
+      intensity: $day.attr('data-level') || '0',
+    };
+  };
+
+  return $days.get().slice(-31).map(parseDay);
+}
+
+const data =
+  (cache.get('footer-data') as DataElement[]) ||
+  cache.put(
+    'footer-data',
+    await fetchData(githubUsername),
+    githubDataRefreshMs
+  );
+
+const INTENSITY_COLORS: Record<string, string> = {
+  '0': 'bg-deep-midnight-indigo',
+  '1': 'bg-deep-twilight-blue',
+  '2': 'bg-deep-twilight-blue',
+  '3': 'bg-slate-steel',
+  '4': 'bg-slate-mist',
+};
+---
+
+<div
+  class="absolute bottom-4 left-4 flex origin-top-left translate-y-full -rotate-90 flex-col gap-1.5"
+>
+  <div class="flex flex-col gap-1.5">
+    <div class="flex gap-1.5">
+      <div class="grid grid-cols-7 gap-1.5">
+        {
+          data
+            .slice(0, 28)
+            .map((element) => (
+              <div
+                class:list={[
+                  'w-4 h-4 test',
+                  INTENSITY_COLORS[element.intensity],
+                ]}
+              />
+            ))
+        }
+      </div>
+      <div class="relative">
+        <div class="absolute top-[62px] w-[62px] origin-top-left -rotate-90">
+          <CustomSvg src="barcode" />
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="flex gap-1.5">
+        <div class="grid grid-cols-3 gap-1.5">
+          {
+            data
+              .slice(28, 31)
+              .map((element) => (
+                <div
+                  class:list={[
+                    'w-4 h-4 test',
+                    INTENSITY_COLORS[element.intensity],
+                  ]}
+                />
+              ))
+          }
+        </div>
+        <div class="text-sm tracking-[0.09em] text-deep-twilight-blue">
+          all rights reserved - 2023
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

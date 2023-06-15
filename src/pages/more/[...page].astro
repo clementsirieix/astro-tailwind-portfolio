@@ -1,0 +1,59 @@
+---
+import type {GetStaticPathsOptions, MDXInstance, Page} from 'astro';
+import type {z} from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Footer from '../../components/common/Footer.astro';
+import {pageSize} from '../../config';
+import type {blogSchema} from '../../content/config';
+import Bio from '../../components/content/Bio.astro';
+import Projects from '../../components/content/Projects.astro';
+import Blog from '../../components/content/Blog.astro';
+
+export async function getStaticPaths({paginate}: GetStaticPathsOptions) {
+  const response =
+    import.meta.env.NODE_ENV === 'test'
+      ? await Astro.glob('../../content/blog/mock/*.mdx')
+      : await Astro.glob('../../content/blog/production/*.mdx');
+
+  return paginate(
+    response.sort(
+      (a, b) =>
+        new Date(b.frontmatter.createdAt).valueOf() -
+        new Date(a.frontmatter.createdAt).valueOf()
+    ),
+    {pageSize: pageSize}
+  );
+}
+
+const {page} = Astro.props as typeof Astro.props & {
+  page: Page<MDXInstance<z.infer<typeof blogSchema>>>;
+};
+---
+
+<Layout className="max-[1200px]:h-auto">
+  <div
+    class="custom-grid-custom-areas grid h-full grid-cols-[3fr_5fr] grid-rows-[auto_1fr] gap-4"
+  >
+    <Bio />
+
+    <Projects />
+
+    <Blog page={page} />
+  </div>
+
+  <Footer />
+</Layout>
+
+<style>
+  .custom-grid-custom-areas {
+    grid-template-areas: 'bio blog' 'projects blog';
+  }
+
+  @media (max-width: 1200px) {
+    .custom-grid-custom-areas {
+      grid-template-areas: 'bio' 'projects' 'blog';
+      grid-template-columns: 1fr !important;
+      display: block !important;
+    }
+  }
+</style>

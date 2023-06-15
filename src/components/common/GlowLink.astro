@@ -1,0 +1,85 @@
+---
+import type {HTMLAttributes} from 'astro/types';
+
+export interface Props extends HTMLAttributes<'a'> {
+  className?: string;
+  color?: keyof typeof colorVariants;
+  shortcut?: string;
+}
+
+const {
+  className,
+  href = '#',
+  color = 'enchanted-meadow',
+  shortcut,
+  target,
+} = Astro.props;
+const colorVariants = {
+  'enchanted-meadow': {
+    border: 'border-enchanted-meadow',
+    fromGradient: 'from-enchanted-meadow/10',
+    text: 'text-enchanted-meadow',
+  },
+  'peach-sorbet': {
+    border: 'border-peach-sorbet',
+    fromGradient: 'from-peach-sorbet/10',
+    text: 'text-peach-sorbet',
+  },
+} as const;
+---
+
+<a
+  class:list={[
+    `glow-link group relative box-border inline-flex px-4 h-12 border-2 ${colorVariants[color].border} border-solid text-misty-lilac leading-[32px] z-50`,
+    className,
+  ]}
+  data-shortcut={shortcut}
+  href={href}
+  target={target}
+>
+  <div
+    class:list={[
+      `absolute top-0 left-0 w-full h-full bg-gradient-to-br ${colorVariants[color].fromGradient} -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200 ease-in`,
+    ]}
+  >
+  </div>
+  <slot />
+  {
+    shortcut ? (
+      <span class={`ml-2 ${colorVariants[color].text} hidden md:inline`}>
+        [{shortcut}]
+      </span>
+    ) : null
+  }
+</a>
+
+<script>
+  type Link = {shortcut: string; href: string; target?: string};
+
+  const elements = document.querySelectorAll('a.glow-link');
+  const links: Link[] = [];
+
+  elements.forEach((element) => {
+    if (element instanceof HTMLAnchorElement && element.dataset.shortcut) {
+      links.push({
+        shortcut: element.dataset.shortcut,
+        href: element.href,
+        target: element.target,
+      });
+    }
+  });
+
+  links.forEach(({shortcut, href, target}) => {
+    document.addEventListener('keydown', (event) => {
+      if (shortcut !== event.key) {
+        return;
+      }
+
+      if (target) {
+        window.open(href, target);
+      } else {
+        window.location.assign(href);
+      }
+    });
+  });
+</script>

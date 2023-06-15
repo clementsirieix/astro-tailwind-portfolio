@@ -1,0 +1,83 @@
+---
+import type {MDXInstance, Page} from 'astro';
+import Card from '../common/Card.astro';
+import ScrollableContainer from '../common/ScrollableContainer.astro';
+import type {z} from 'astro:content';
+import type {blogSchema} from '../../content/config';
+
+import mdxComponents from '../mdx';
+
+export interface Props {
+  page: Page<MDXInstance<z.infer<typeof blogSchema>>>;
+}
+
+const {page} = Astro.props;
+---
+
+<Card className="custom-blog" title="blog">
+  <div class="my-4 text-right text-deep-twilight-blue">
+    This is the place for writing my thoughts.
+  </div>
+
+  <ScrollableContainer
+    className="custom-markdown-wrapper flex h-auto grow flex-col text-misty-lilac"
+  >
+    {
+      page.data.length === 0 ? (
+        <div class="custom-title w-full text-center font-serif text-lg text-misty-lilac">
+          My blog posts will go over there 🚧
+        </div>
+      ) : (
+        page.data.map(({Content}) => (
+          <div>
+            <Content components={mdxComponents} />
+          </div>
+        ))
+      )
+    }
+  </ScrollableContainer>
+
+  <div class="mt-4 flex items-center gap-4 text-misty-lilac">
+    <span class={page.url.prev == null ? 'cursor-not-allowed opacity-50' : ''}>
+      <a
+        class:list={[
+          'inline-block w-8 h-8 leading-[20px] text-[16px] text-center bg-midnight-indigo border-2 border-solid border-t-slate-steel border-l-slate-steel border-r-midnight-navy border-b-midnight-navy',
+          page.url.prev == null ? 'pointer-events-none' : '',
+        ]}
+        href={page.url.prev || '#'}>⊲</a
+      >
+    </span>
+
+    <span>{page.currentPage}</span>
+
+    <span class={page.url.next == null ? 'cursor-not-allowed opacity-50' : ''}>
+      <a
+        class:list={[
+          'inline-block w-8 h-8 leading-[20px] text-[16px] text-center bg-midnight-indigo border-2 border-solid border-t-slate-steel border-l-slate-steel border-r-midnight-navy border-b-midnight-navy',
+          page.url.next == null ? 'pointer-events-none' : '',
+        ]}
+        href={page.url.next || '#'}>⊳</a
+      >
+    </span>
+  </div>
+</Card>
+
+<style>
+  .custom-blog {
+    grid-area: blog;
+  }
+
+  .custom-markdown-wrapper :global(img) {
+    aspect-ratio: 16 / 9;
+    margin: 0 auto;
+    width: 400px;
+    object-fit: cover;
+    padding-bottom: 1rem;
+  }
+
+  @media (max-width: 1200px) {
+    .custom-blog {
+      max-height: 600px;
+    }
+  }
+</style>

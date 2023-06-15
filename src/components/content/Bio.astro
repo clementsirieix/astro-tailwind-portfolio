@@ -1,0 +1,30 @@
+---
+import {bio, linktreeURL} from '../../config';
+
+import Card from '../common/Card.astro';
+import Welcome from '../stylized/Welcome.astro';
+---
+
+<Card className="custom-bio" title="bio">
+  <Welcome />
+
+  <div class="group m-4 text-misty-lilac">
+    {bio}<a class="ml-4 text-peach-sorbet" href={linktreeURL} target="_blank">
+      <span class="group-hover:italic"> Go to links</span>
+      [🔗]</a
+    >
+  </div>
+</Card>
+
+<style>
+  .custom-bio {
+    grid-area: bio;
+  }
+
+  @media (max-width: 1200px) {
+    .custom-bio {
+      height: fit-content !important;
+      margin-bottom: 1rem;
+    }
+  }
+</style>

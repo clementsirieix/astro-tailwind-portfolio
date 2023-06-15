@@ -1,0 +1,12 @@
+---
+---
+
+<pre class="custom-pre mb-8 mr-4 bg-shadowed-slate p-4"><slot /></pre>
+
+<script>
+  const elements = document.querySelectorAll('pre.custom-pre');
+
+  elements.forEach((element) => {
+    element.innerHTML = element.innerHTML.replace(/^(<.*>)([\n\r]  )/, '$1');
+  });
+</script>

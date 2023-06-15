@@ -1,0 +1,27 @@
+---
+const GA_TRACKING_ID = import.meta.env.GA_TRACKING_ID;
+---
+
+<script
+  type="text/partytown"
+  src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+></script>
+
+<script
+  data-id="ga-init"
+  data-ga-tracking-id={GA_TRACKING_ID}
+  type="text/partytown"
+>
+  const trackingId = document
+    .querySelector('script[data-id="ga-init"]')
+    .getAttribute('data-ga-tracking-id');
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    // eslint-disable-next-line prefer-rest-params
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+
+  gtag('config', trackingId);
+</script>
